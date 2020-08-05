@@ -64,6 +64,10 @@ image = Image.fromarray(image)
 
 fake_image = Image.fromarray(np.uint8(fake_image))
 
+# val_images - inference_ref_name
+# val_labels - inference_tag_name
+# val_orient - inference_orient_name
+
 if opt.use_ig:
     #fake_image.save('./inference_samples/inpaint_fake_image.jpg')
     image.save("./inference_samples/inpaint_ref-{}_tag-{}_orient-{}.jpg".format(
