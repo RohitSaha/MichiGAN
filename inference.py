@@ -51,7 +51,7 @@ fake_image_np = fake_image.copy()
 img = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_images/{}.jpg'.format(
     opt.inference_ref_name)).convert("RGB").resize((128, 128)))
 
-lab = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_labels/{}.png'.format(
+lab = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_images/{}.jpg'.format(
     opt.inference_tag_name)).convert("RGB").resize((128, 128)))
 
 orient = np.array(
