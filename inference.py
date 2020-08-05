@@ -48,9 +48,25 @@ if opt.add_feat_zeros or opt.add_zeros:
     fake_image = fake_image_tmp
 
 fake_image_np = fake_image.copy()
+img = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_images/{}.jpg'.format(
+    opt.inference_ref_name)).convert("RGB").resize((128, 128)))
+
+lab = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_labels/{}.png'.format(
+    opt.inference_tag_name)).convert("RGB").resize((128, 128)))
+
+orient = np.array(
+    Image.open('/home/ubuntu/MichiGAN_FFHQ/val_dense_orients/{}_orient_dense.png'.format(
+        opt.inference_orient_name)).convert("RGB").resize((128, 128)))
+
+image = np.concatenate((np.uint8(img), np.uint8(lab), np.uint8(orient), np.uint8(fake_image)),
+    axis=1)
+image = Image.fromarray(image)
+
 fake_image = Image.fromarray(np.uint8(fake_image))
 
 if opt.use_ig:
-    fake_image.save('./inference_samples/inpaint_fake_image.jpg')
+    #fake_image.save('./inference_samples/inpaint_fake_image.jpg')
+    image.save("./inference_samples/inpaint_ref-{}_tag-{}_orient-{}.jpg".format(
+        opt.inference_ref_name, opt.inference_tag_name, opt.inference_orient_name))
 else:
     fake_image.save('./inference_samples/fake_image.jpg')
