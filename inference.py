@@ -20,6 +20,24 @@ import numpy as np
 import torch.nn as nn
 import cv2
 
+def cv2_resize(torch_tensor, target_shape):
+    # torch_tensor = [1, C, H, W]
+    np_tensor = torch_tensor[0, ...].cpu().numpy()
+    np_tensor = np.transpose(np_tensor, (1, 2, 0))
+    np_tensor = cv2.resize(np_tensor.astype(np.float32), (target_shape, target_shape))
+    np_tensor = np_tensor.astype(np.int64)
+
+    if len(np_tensor.shape) == 3:
+        np_tensor = np.transpose(np_tensor, (2, 0, 1))
+
+    np_tensor = np.expand_dims(np_tensor, axis=0)
+    if len(np_tensor.shape) == 3:
+        np_tensor = np.expand_dims(np_tensor, axis=0)
+
+    torch_tensor = torch.Tensor(np_tensor)
+    return torch_tensor.cuda()
+
+
 opt = TestOptions().parse()
 
 model = Pix2PixModel(opt)
@@ -39,6 +57,9 @@ print('process image... %s' % img_path)
 
 # remove background
 if opt.remove_background:
+    if generated.shape[2] != data['label_tag'].shape[2]:
+        data['label_tag'] = cv2_resize(data['label_tag'], generated.shape[2])
+        data['image_tag'] = cv2_resize(data['image_tag'], generated.shape[2])
     generated = generated * data['label_tag'].float() + data['image_tag'] *(1 - data['label_tag'].float())
 fake_image = tensor2im(generated[0])
 if opt.add_feat_zeros or opt.add_zeros:

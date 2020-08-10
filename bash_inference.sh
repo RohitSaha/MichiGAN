@@ -5,6 +5,6 @@ reference=('56000' '56002' '56006' '56008' '57011' '67172')
 
 for img in ${image[@]}; do
     for lab in ${reference[@]}; do
-            python inference.py --name /home/ubuntu/checkpoint/test --gpu_ids 0 --inference_ref_name $lab --inference_tag_name $img --inference_orient_name $lab --netG spadeb --which_epoch 49 --use_encoder --noise_background --expand_mask_be --expand_th 5 --use_ig --load_size 128 --crop_size 128 --add_feat_zeros --data_dir /home/ubuntu/MichiGAN_FFHQ
+            python inference.py --name /home/ubuntu/checkpoint/test --gpu_ids 0 --remove_background --inference_ref_name $lab --inference_tag_name $img --inference_orient_name $lab --netG spadeb --which_epoch 49  --use_encoder --noise_background --expand_mask_be --expand_th 5 --use_ig --load_size 128 --crop_size 128 --add_feat_zeros --data_dir /home/ubuntu/MichiGAN_FFHQ
     done
 done
