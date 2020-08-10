@@ -50,7 +50,7 @@ def single_inference_dataLoad(opt):
     base_dir = opt.data_dir
     subset = opt.subset
     label_ref_dir = base_dir + '/' + subset + '_labels/' + opt.inference_ref_name + '.png'
-    label_tag_dir = base_dir + '/' + subset + '_labels/' + opt.inference_tag_name + '.png'
+    label_tag_dir = base_dir + '/' + subset + '_labels/' + opt.inference_ref_name + '.png'
     orient_tag_dir = base_dir + '/' + subset + '_dense_orients/' + opt.inference_tag_name + '_orient_dense.png'
     orient_ref_dir = base_dir + '/' + subset + '_dense_orients/' + opt.inference_orient_name + '_orient_dense.png'
     orient_mask_dir = base_dir + '/' + subset + '_labels/' + opt.inference_orient_name + '.png'
