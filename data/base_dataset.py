@@ -8,6 +8,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 import numpy as np
 import random
+import os
 import torch
 import cv2
 import matplotlib.pyplot as plt
@@ -104,10 +105,10 @@ def single_inference_dataLoad(opt):
 
     # rgb orientation maps
     if opt.use_ig and not opt.no_orientation:
-        orient_tag_rgb = trans_orient_to_rgb(np.array(orient_ref), np.array(label_tag), np.array(orient_mask))
+        orient_tag_rgb = trans_orient_to_rgb(np.array(orient_ref), np.array(label_ref), np.array(orient_mask))
         orient_rgb_tensor = transform_label(orient_tag_rgb)
         orient_rgb_tensor = torch.unsqueeze(orient_rgb_tensor, 0)
-        orient_rgb_tensor = orient_rgb_tensor * label_tag_tensor
+        orient_rgb_tensor = orient_rgb_tensor * label_ref_tensor
     else:
         orient_rgb_tensor = torch.tensor(0)
 
@@ -145,6 +146,43 @@ def single_inference_dataLoad(opt):
 
     orient_tensor = transform_label(orient_tag) * 255
     orient_tensor = torch.unsqueeze(orient_tensor, 0)
+
+    '''save all images'''
+    if not os.path.exists('check_images'):
+        os.makedirs('check_images')
+        lrt = Image.fromarray(
+            (label_ref_tensor[0, 0, ...] * 255).cpu().numpy()
+        ).convert("RGB").save('check_images/lrt.png')
+        irt = Image.fromarray(
+            np.transpose(
+                ((image_ref_tensor[0, ...] + 1.) * 127.5).cpu().numpy().astype(np.uint8),
+                (1, 2, 0)
+            )
+        ).convert("RGB").save('check_images/irt.jpg')
+        
+        ltt = Image.fromarray(
+            (label_tag_tensor[0, 0, ...] * 255).cpu().numpy()
+        ).convert("RGB").save('check_images/ltt.png')
+        itt = Image.fromarray(
+            np.transpose(
+                ((image_tag_tensor[0, ...] + 1.) * 127.5).cpu().numpy().astype(np.uint8),
+                (1, 2, 0)
+            )
+        ).save('check_images/itt.jpg')
+
+        ht = Image.fromarray(
+            (hole_tensor[0, 0, ...] * 255).cpu().numpy()
+        ).convert("RGB").save('check_images/ht.png')
+        ot = Image.fromarray(
+            orient_tensor[0, 0, ...].cpu().numpy()
+        ).convert("RGB").save('check_images/ot.png')
+        ort = Image.fromarray(
+            np.transpose(
+                ((orient_rgb_tensor[0, ...] + 1.) * 127.5).cpu().numpy().astype(np.uint8),
+                (1, 2, 0)
+            )
+        ).save('check_images/ort.png')
+
 
     data = {'label_ref': label_ref_tensor,
             'label_tag': label_tag_tensor,

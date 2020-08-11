@@ -70,14 +70,14 @@ if opt.add_feat_zeros or opt.add_zeros:
 
 fake_image_np = fake_image.copy()
 img = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_images/{}.jpg'.format(
-    opt.inference_ref_name)).convert("RGB").resize((128, 128)))
+    opt.inference_ref_name)).convert("RGB").resize((opt.crop_size, opt.crop_size)))
 
 lab = np.array(Image.open('/home/ubuntu/MichiGAN_FFHQ/val_images/{}.jpg'.format(
-    opt.inference_tag_name)).convert("RGB").resize((128, 128)))
+    opt.inference_tag_name)).convert("RGB").resize((opt.crop_size, opt.crop_size)))
 
 orient = np.array(
     Image.open('/home/ubuntu/MichiGAN_FFHQ/val_dense_orients/{}_orient_dense.png'.format(
-        opt.inference_orient_name)).convert("RGB").resize((128, 128)))
+        opt.inference_orient_name)).convert("RGB").resize((opt.crop_size, opt.crop_size)))
 
 image = np.concatenate((np.uint8(img), np.uint8(orient), np.uint8(lab), np.uint8(fake_image)),
     axis=1)
